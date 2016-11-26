@@ -11,7 +11,7 @@ This is an approach solves that by
 
 The business logic is connected to in- and outbound channels (e.g. an RabbitMQ topic) by defining that in the `config.json`.
 
-Have a look at the [example](https://github.com/ma-ha/micro-service-toolkit/tree/master/test) 
+Have a look at the [example](https://github.com/ma-ha/micro-service-toolkit/tree/master/test) :-)
 
 # Files in this project
 * `service.js`: the microservice technical framework
