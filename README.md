@@ -22,8 +22,8 @@ The business logic is connected to in- and outbound channels (e.g. an RabbitMQ t
 To start this MessageProcessor micro services:
 
 1. start a RabbitMQ: 
-  1. docker pull rabbitmq
-  2. docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management 
+  1. `docker pull rabbitmq`
+  2. `docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management` 
   3. Console is on `http://localhost:15672`
 2. Prepare the service: `npm install`
 3. Start the service in the test directory: `node myMessageProcessor.js --rabbitHost=localhost`
