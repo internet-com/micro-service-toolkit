@@ -41,8 +41,16 @@ mq.startTopicReceiver = function ( inService ) {
     function ( err, q ) {
       if ( err ) { log.error( 'inboundRabbitMQ', err ); process.exit(1) }
       log.info( 'inboundRabbitMQ', 'hookBindQueue '+ this.name + '...' )
+      this.q = q
       this.ch.bindQueue( q.queue, this.config.exchange, this.config.filter );
-      this.ch.consume( q.queue, this.hookConsume.bind( this ) )
+      this.resolve()
+      return
+    }
+
+  inService.start =
+    function() {
+      log.info( 'inboundRabbitMQ', 'starting consumer: '+ this.name + '...' )
+      this.ch.consume( this.q.queue, this.hookConsume.bind( this ) )    
     }
 
   inService.hookConsume = 
@@ -52,8 +60,12 @@ mq.startTopicReceiver = function ( inService ) {
     }
   
   // now start it:
-  amqp.connect( inService.rabbitMqURL, inService.hookCreChannel.bind( inService ) )
-
+  return new Promise( 
+      function( resolve, reject ) {
+        inService.resolve = resolve
+        amqp.connect( inService.rabbitMqURL, inService.hookCreChannel.bind( inService ) )
+      }
+  )
 }
 
 mq.getRabbitMqURL = function() {

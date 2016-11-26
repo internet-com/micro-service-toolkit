@@ -5,7 +5,8 @@ var log    = require( 'npmlog' )
 // create class and export it
 var service = exports = module.exports = {
   config  : null,
-  inbound : {}
+  inbound : {},
+  outbound : {}
 }
 
 // init must be called to start the service
@@ -13,10 +14,28 @@ service.init = function ( config, callback ) {
   if ( ! config ) { log.error('Init','"config.json" not found'); process.exit(1) }
   this.config = config
   log.info( 'Init', 'starting service "'+config.serviceName+'"' )
-  initializeOutboundFunctions( config )    
-  initializeInboundHooks( config )
-  if ( callback ) callback()  
+  
+  initializeOutboundFunctions( config )
+  .then( 
+    function() { 
+      return initializeInboundHooks( config )
+    } )
+  .then( 
+    function() { 
+      if ( callback ) callback()  
+    } )
+  //log.info( 'XX', service )
 }
+
+
+// call this to start consuming messages
+service.start = function() {
+  for ( var inChannel in service.inbound ) {
+    service.inbound[ inChannel ].start()
+  }
+  log.info( 'Init', 'Service "'+this.config.serviceName+'" started.' )
+}
+
 
 // wrapper for logger
 service.log = function ( module, message ) {
@@ -24,8 +43,10 @@ service.log = function ( module, message ) {
   log.info( module, message )
 }
 
+
 // initialize all inbound connections to the service
 function initializeInboundHooks( config ) {
+  var promises = [];
   for ( var hook in config.hooks ) {
     var hookCfg = config.hooks[ hook ]
     
@@ -35,9 +56,9 @@ function initializeInboundHooks( config ) {
         log.info( 'InboundHooks', 'RabbitMQ subscriber "' + hook + '"' )
         service.inbound[ hook ] = hookCfg
         if ( hookCfg.config  && hookCfg.config.exchange &&  hookCfg.config.filter ) {
-          log.info( 'OutboundFunctions', 'RabbitMQ publisher "' + hook + '": exchange="'+ hookCfg.config.exchange +'" filter="'+hookCfg.config.filter+'"' )
+          log.info( 'InboundHooks', 'RabbitMQ receiver "' + hook + '": exchange="'+ hookCfg.config.exchange +'" filter="'+hookCfg.config.filter+'"' )
           var mq = require( './channels/inboundRabbitMQ' )
-          mq.startTopicReceiver( service.inbound[ hook ] )
+          promises.push( mq.startTopicReceiver( service.inbound[ hook ] ) )
         } else {
           log.error( 'InboundFunctions', '"'+hook+'" has invalid "config", required "exchange" and "filter"' )
           process.exit(1)
@@ -48,30 +69,31 @@ function initializeInboundHooks( config ) {
       }
     }
   }
-  //log.info( 'XX', service )
+  return Promise.all( promises )
 }
 
 
 //initialize all inbound connections to the service
 function initializeOutboundFunctions( config ) {
+  var promises = [];
   for ( var hook in config.hooks ) {
     var hookCfg = config.hooks[ hook ]
-    if ( hookCfg.direction == 'outbound' && hookCfg.type == 'RabbitMQ' ) {
-      
-      service[ hook ] = hookCfg
-      if ( hookCfg.config  && hookCfg.config.exchange &&  hookCfg.config.routingKey ) {
-        log.info( 'OutboundFunctions', 'RabbitMQ publisher "' + hook + '": exchange="'+ hookCfg.config.exchange +'" routingKey="'+hookCfg.config.routingKey+'"' )          
-        service[ hook ].publish = function ( message ) {
-            log.info( 'publish message', message )          
-            // TODO
-//            var msg = JSON.stringify( message )
-//            channel.assertExchange( 'statistics', 'topic',  { durable : false } )
-//            channel.publish( 'statistics', 'statistics.prm', new Buffer( msg ) )
+    if ( hookCfg.direction == 'outbound' ) {
+      service.outbound[ hook ] = hookCfg
+      if ( hookCfg.type == 'RabbitMQ' ) {
+        if ( hookCfg.config  && hookCfg.config.exchange &&  hookCfg.config.routingKey ) {
+          log.info( 'OutboundFunctions', 'RabbitMQ publisher "' + hook + '": exchange="'+ hookCfg.config.exchange +'" routingKey="'+hookCfg.config.routingKey+'"' )
+          var mqOut = require( './channels/outboundRabbitMQ' )
+          promises.push( mqOut.startTopicPublisher( service.outbound[ hook ] ) )
+        } else {
+          log.error( 'OutboundFunctions', '"'+hook+'" has invalid "config", required "exchange" and "filter"' )
+          process.exit(1)
         }
       } else {
-        log.error( 'OutboundFunctions', '"'+hook+'" has invalid "config", required "exchange" and "routingKey"' )
-        process.exit(1)
+        log.error( 'OutboundFunctions', 'Type "'+hookCfg.type+'" for "'+hook+'" is not supported!' )      
       }
-    }    
+      
+    }
   }
+  return Promise.all( promises )
 }
