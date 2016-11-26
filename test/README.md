@@ -31,7 +31,7 @@ This configuration contains one RabbitMQ input and one output channel:
 
 # Template For Business Logic:
 
-For the full example pplease have a look at [myMessageProcessor.js](https://github.com/ma-ha/micro-service-toolkit/blob/master/test/myMessageProcessor.js)
+For the full example please have a look at [myMessageProcessor.js](https://github.com/ma-ha/micro-service-toolkit/blob/master/test/myMessageProcessor.js)
 
 ```javascript
 var service = require('micro-service-toolkit')
