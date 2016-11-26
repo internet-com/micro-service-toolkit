@@ -2,12 +2,12 @@
 Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.
 
 # What's it?
-We'rehHaving a lot microservices running on node.js and communicating via RabbitMQ topics. It was annoying to see lot of similar infrastructure glue code.
+We're running a lot of microservices on node.js communicating via RabbitMQ topics. It was annoying to see lot of similar infrastructure glue code.
 
-This is an approach to
+This is an approach solves that by
 
-1. separate technical infrastructure code completely from business logic
-2. avoid no hard coded infrastructure code and use JSON based configuration instead
+1. separating technical infrastructure code completely from business logic
+2. avoiding hard coded infrastructure code and use JSON based configuration instead
 
 The business logic is connected to in- and outbound channels (e.g. an RabbitMQ topic) by defining that in the `config.json`.
 
