@@ -1,7 +1,7 @@
 # micro-service-toolkit
 Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.
 
-# What's it?
+## What's it?
 We're running a lot of microservices on node.js communicating via RabbitMQ topics. It was annoying to see lot of similar infrastructure glue code.
 
 This is an approach solves that by
@@ -13,17 +13,17 @@ The business logic is connected to in- and outbound channels (e.g. an RabbitMQ t
 
 Have a look at the [example](https://github.com/ma-ha/micro-service-toolkit/tree/master/test) :-)
 
-# Files in this project
+## Files in this project
 * `service.js`: the microservice technical framework
 * `channels/inboundRabbitMq.js`: first channel plug in
 * `test/myMessageProcessor.js`: dummy microservice business logic part
-* `test/config.json`: configuration of the microservices in- and output channels and the hooked business logic
-* `test/sendTesMsg.js`: create a test message to be processed by the MessageProcessor
+* `test/config.json`: configuration how to connect in- and output channels to the business logic
+* `test/sendTesMsg.js`: create a test message to be processed by the 'MessageProcessor'
 
-# Run the 'MessageProcessor' test service
+## Run the 'MessageProcessor' test service
 To start this MessageProcessor micro services:
 
-1. start a RabbitMQ: 
+1. Start RabbitMQ: 
   1. `docker pull rabbitmq`
   2. `docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management` 
   3. Console is on `http://localhost:15672`
