@@ -1,0 +1,14 @@
+{
+  "name": "microservice-test",
+  "version": "0.1.0",
+  "description":"Just an idea",
+  "author": "MH",
+  "main": "index.js",
+  "dependencies": {
+    "npmlog": "^4.0.0",
+    "amqplib": "^0.4.2",
+    "minimist": "^1.2.0"
+  },
+  "private": true,
+  "license":"UNLICENSED"
+}

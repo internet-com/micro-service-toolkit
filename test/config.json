@@ -1,0 +1,24 @@
+{
+  "serviceName":"MessageProcessor",
+  "hooks": {
+    "testMessageProcessor": { 
+      "direction":"inbound",
+      "name":"testMessageProcessor",
+      "type":"RabbitMQ", 
+      "config":{
+        "exchange":"test",
+        "queue":"testMessageProcessor",
+        "filter":"test.*"
+      }
+    },
+    "testMessageSender":{ 
+      "direction":"outbound",
+      "name":"testMessageSender", 
+      "type":"RabbitMQ", 
+      "config":{
+        "exchange":"test",
+        "routingKey":"test.me"
+      } 
+    }
+  }
+}
