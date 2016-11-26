@@ -1,9 +1,9 @@
 {
   "name": "micro-service-toolkit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description":"Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.",
   "author":"ma-ha",
-  "main": "index.js",
+  "main": "service.js",
   "dependencies": {
     "npmlog": "^4.0.0",
     "amqplib": "^0.4.2",
