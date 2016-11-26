@@ -2,9 +2,9 @@
 Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.
 
 # What's it?
-Having a lot microservices running on node.js and communicating via RabbitMQ topics, it was annoying to see lot of similar infrastructure glue code.
+We'rehHaving a lot microservices running on node.js and communicating via RabbitMQ topics. It was annoying to see lot of similar infrastructure glue code.
 
-This is a approach to
+This is an approach to
 
 1. separate technical infrastructure code completely from business logic
 2. avoid no hard coded infrastructure code and use JSON based configuration instead

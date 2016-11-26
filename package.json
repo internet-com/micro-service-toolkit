@@ -1,14 +1,20 @@
 {
-  "name": "microservice-test",
+  "name": "micro-service-toolkit",
   "version": "0.1.0",
-  "description":"Just an idea",
-  "author": "MH",
+  "description":"Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.",
+  "author":"ma-ha",
   "main": "index.js",
   "dependencies": {
     "npmlog": "^4.0.0",
     "amqplib": "^0.4.2",
     "minimist": "^1.2.0"
   },
-  "private": true,
-  "license":"UNLICENSED"
+  "keywords":[
+    "microservice","amqp","RabbitMQ","lightweight","plug-in","JSON config"
+  ],
+  "repository":{
+    "type":"git",
+    "url":"https://github.com/ma-ha/micro-service-toolkit.git" 
+  },
+  "license":"MIT"
 }
