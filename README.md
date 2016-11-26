@@ -5,6 +5,7 @@ Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JS
 Having a lot microservices running on node.js and communicating via RabbitMQ topics, it was annoying to see lot of similar infrastructure glue code.
 
 This is a approach:
+
 1. to separate technical infrastructure code completely from business logic
 2. no hard coded infrastructure code
 
@@ -19,6 +20,7 @@ The business logic is connected to in- and outbound channels (e.g. an RabbitMQ t
 
 # Run the 'MessageProcessor' test service
 To start this MessageProcessor micro services:
+
 1. start a RabbitMQ: 
 1.1 docker pull rabbitmq
 1.2 docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management 
