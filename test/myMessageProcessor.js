@@ -18,7 +18,8 @@ service.init( config, function(){
       // ... do some business ...
       
       this.ch.ack( message )
-      //else this.ch.reject(msg, true);
+      //else 
+      //this.ch.reject( message, true )
       
       //testMessageSender( {'xyz':'blub'} )
       return 
