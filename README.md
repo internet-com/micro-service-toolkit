@@ -1,5 +1,5 @@
 # micro-service-toolkit
-Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config.
+Wire business logic in node with in- and outbound channels (e.g. RabbitMQ) by JSON config. 
 
 ## What's it?
 We're running a lot of microservices on node.js communicating via RabbitMQ topics. It was annoying to see lot of similar infrastructure glue code.
@@ -12,6 +12,8 @@ This is an approach solves that by
 The business logic is connected to in- and outbound channels (e.g. an RabbitMQ topic) by defining that in the `config.json`.
 
 Have a look at the [example](https://github.com/ma-ha/micro-service-toolkit/tree/master/test) :-)
+
+Published as [npm package](https://www.npmjs.com/package/micro-service-toolkit), you can just do `npm install micro-service-toolkit`.
 
 ## Files in this project
 * `service.js`: the microservice technical framework
