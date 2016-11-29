@@ -33,7 +33,10 @@ mq.startTopicPublisher = function ( outService ) {
 
   outService.publish = 
     function ( msg ) {
-      this.ch.publish( this.config.exchange, this.config.routingKey, new Buffer( msg ) )
+      this.ch.publish( 
+          this.config.exchange, 
+          this.config.routingKey, 
+          new Buffer( JSON.stringify( msg ) ) )
       return 
     }
   
@@ -65,3 +68,15 @@ mq.getRabbitMqURL = function() {
 }  
 
 
+mq.genTemplate = function( cfg ) {
+  var t = []
+  if ( ! cfg && ! cfg.name ) {
+    t.push( "// ERROR: config not valid, 'name' attibute missing " )
+    return t
+  }
+  t.push( "function "+cfg.name+"( message ) { ")
+  t.push( "  service.outbound['"+cfg.name+"'].publish( message )")
+  t.push( "}" )
+  
+  return t
+}

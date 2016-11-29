@@ -85,4 +85,20 @@ mq.getRabbitMqURL = function() {
   return rabbitMqURL
 }  
 
-
+mq.genTemplate = function( cfg ) {
+ var t = []
+ if ( ! cfg && ! cfg.name ) {
+   t.push( "// ERROR: config not valid, 'name' attibute missing " )
+   return t
+ }
+ t.push( "service.inbound['"+cfg.name+"'].processMessage =" )
+ t.push( "  function( message ) {" )
+ t.push( "    var data = JSON.parse( message.content )" )
+ t.push( "    // ... do some business ..." )
+ t.push( "    this.ch.ack( message ) " )
+ t.push( "    // else" )
+ t.push( "    //this.ch.reject( message, true )" )
+ t.push( "    return" )
+ t.push( "  }" )
+ return t
+}

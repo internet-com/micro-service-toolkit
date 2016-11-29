@@ -6,7 +6,7 @@ var config = require('./config.json')
 
 service.init( config, function(){
   service.log( 'MessageProcessor', 'init done...' )
-  // TODO: process things after intialization
+  // TODO: process things after initialization
 
   // ============================================================================
   // Receive messages from topic: 
@@ -21,7 +21,7 @@ service.init( config, function(){
       //else 
       //this.ch.reject( message, true )
       
-      //testMessageSender( {'xyz':'blub'} )
+      //testMessageSender( {'xyz':'abc'} ) // this will cause an endless loop :-D
       return 
     }
     
@@ -34,5 +34,5 @@ service.init( config, function(){
 // Wrapper to use for sending outbound messages
 function testMessageSender( message ) {
   service.log( 'testMessageSender.publish', message)
-  service.outbound.testMessageSender.publish( message )
+  service.outbound['testMessageSender'].publish( message )
 }

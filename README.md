@@ -33,3 +33,10 @@ To start this MessageProcessor micro services:
 3. Start the service in the test directory: `node myMessageProcessor.js --rabbitHost=localhost`
 
 To send a test message simply run `node sendTestMsg.js --rabbitHost=localhost` in the test directory.
+
+## Gernerate Code Template
+Call syntax:
+
+```bash
+node gerenateTemplate.js --config=./test/config.json > ./test/myService.js
+```
