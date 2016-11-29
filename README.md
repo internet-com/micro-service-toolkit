@@ -38,5 +38,5 @@ To send a test message simply run `node sendTestMsg.js --rabbitHost=localhost` i
 Call syntax:
 
 ```bash
-node gerenateTemplate.js --config=./test/config.json > ./test/myService.js
+node generateTemplate.js --config=./test/config.json > ./test/myService.js
 ```
