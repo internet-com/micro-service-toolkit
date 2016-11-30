@@ -2,15 +2,15 @@
 
 Start Parameters:
 
-* ```--rabbitHost=<hostname or IP>```
-  default: "amq"
+```--rabbitHost=<hostname or IP>```
+* default: "amq"
  
-* ```--rabbitUser=<user-id>```
-  default: "user"
+```--rabbitUser=<user-id>```
+*  default: "user"
  
-* ```--rabbitPwd=<password>```
-  default: "password"
+```--rabbitPwd=<password>```
+*  default: "password"
  
-* ```--rabbitURL=<url>```
-  overrules rabbitHost, rabbitUser and rabbitPwd
-  no default set
+```--rabbitURL=<url>```
+*  overrules rabbitHost, rabbitUser and rabbitPwd
+*  by default not set
