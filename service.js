@@ -1,12 +1,15 @@
 /* Core service framework */
-var amqp   = require( 'amqplib/callback_api' )
-var log    = require( 'npmlog' )
-  
+var amqp      = require( 'amqplib/callback_api' )
+var log       = require( 'npmlog' )
+var heartbeat = require( 'amqp-heartbeat' )
+
 // create class and export it
 var service = exports = module.exports = {
-  config  : null,
-  inbound : {},
-  outbound : {}
+  version  : null,
+  config   : null,
+  inbound  : {},
+  outbound : {},
+  mqURL    : require( './channels/outboundRabbitMQ' ).getRabbitMqURL()
 }
 
 // init must be called to start the service
@@ -15,7 +18,11 @@ service.init = function ( config, callback ) {
   this.config = config
   log.info( 'Init', 'starting service "'+config.serviceName+'"' )
   
-  initializeOutboundFunctions( config )
+  initialzeHeatbeat( this.mqURL, config, this.version )
+  .then (
+    function() {
+      return  initializeOutboundFunctions( config ) 
+    } )
   .then( 
     function() { 
       return initializeInboundHooks( config )
@@ -36,11 +43,27 @@ service.start = function() {
   log.info( 'Init', 'Service "'+this.config.serviceName+'" started.' )
 }
 
-
 // wrapper for logger
 service.log = function ( module, message ) {
   // npmlog may be a messaging backbone in the future
   log.info( module, message )
+}
+
+// wrapper for status
+service.setHeartbeatStatus = function( statusTxt ) {
+  heartbeat.setStatus( statusTxt )
+}
+
+// start heartbeat module
+function initialzeHeatbeat( mqURL, config, version ) {
+  return new Promise( 
+    function( resolve, reject ) {
+      log.info( 'Init', 'Start heartbeat' )
+      heartbeat.start( mqURL, config.serviceName, version )
+      resolve()
+      return
+    }
+  )
 }
 
 

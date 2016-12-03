@@ -1,6 +1,7 @@
 /* This is a first example of microservice business logic */
 var service = require( '../service' ) // to use npm package, replace by: require('micro-service-toolkit')
-
+service.version = '1.0'  // or: require( '.package.json' ).version
+  
 // config contains all definitions of input and output wiring
 var config = require('./config.json')
 
