@@ -6,6 +6,7 @@ var pkg = require('./package.json');
 
 console.log( "/* micro-service-toolkit: Version "+pkg.version+" */" )
 console.log( "var service = require('micro-service-toolkit')\n" )
+console.log( "service.version = '0.1'\n" )
 console.log( "var config  = require('./config.json')\n" )
 console.log( "service.init( config, function(){" )
 console.log( "  service.log( 'MessageProcessor', 'init done...' )\n" )
