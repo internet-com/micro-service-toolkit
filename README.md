@@ -34,6 +34,8 @@ To start this MessageProcessor micro services:
 
 To send a test message simply run `node sendTestMsg.js --rabbitHost=localhost` in the test directory.
 
+BTW: The framework uses [amqp-heartbeat](https://www.npmjs.com/package/amqp-heartbeat) to enable a monitoring of the microservices.
+
 ## Gernerate Code Template
 Call syntax:
 

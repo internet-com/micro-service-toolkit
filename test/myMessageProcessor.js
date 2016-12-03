@@ -5,6 +5,8 @@ service.version = '1.0'  // or: require( '.package.json' ).version
 // config contains all definitions of input and output wiring
 var config = require('./config.json')
 
+var processedMessageCount = 0
+
 service.init( config, function(){
   service.log( 'MessageProcessor', 'init done...' )
   // TODO: process things after initialization
@@ -21,8 +23,9 @@ service.init( config, function(){
       this.ch.ack( message )
       //else 
       //this.ch.reject( message, true )
-      
-      //testMessageSender( {'xyz':'abc'} ) // this will cause an endless loop :-D
+      processedMessageCount++
+      service.setHeartbeatStatus( 'Messages processed: '+processedMessageCount )
+      //testMessageSender( {'xyz':'abc'} ) // this will cause an endless loop :-D 
       return 
     }
     
