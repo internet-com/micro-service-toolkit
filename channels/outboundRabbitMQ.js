@@ -17,6 +17,7 @@ mq.startTopicPublisher = function ( outService ) {
     function ( err, conn ) {
       if ( err ) { log.error( 'outboundRabbitMQ', err ); process.exit(1) }
       log.info( 'hookCreChannel', this.name + ' ...' )  
+      this.conn = conn
       conn.createChannel( this.hookDoAsserts.bind( this ) ) 
       // rem: by .bind(this) it will be a method call, otherwise a function call with no ref to this any more :-)
     }

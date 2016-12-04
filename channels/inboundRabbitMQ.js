@@ -17,6 +17,7 @@ mq.startTopicReceiver = function ( inService ) {
     function ( err, conn ) {
       if ( err ) { log.error( 'inboundRabbitMQ', err ); process.exit(1) }
       //log.info( 'hookCreChannel', this.name + ' ...' )  
+      this.conn = conn
       conn.createChannel( this.hookDoAsserts.bind( this ) ) 
       // rem: by .bind(this) it will be a method call, otherwise a function call with no ref to this any more :-)
     }
@@ -42,7 +43,7 @@ mq.startTopicReceiver = function ( inService ) {
       if ( err ) { log.error( 'inboundRabbitMQ', err ); process.exit(1) }
       log.info( 'inboundRabbitMQ', 'hookBindQueue '+ this.name + '...' )
       this.q = q
-      this.ch.bindQueue( q.queue, this.config.exchange, this.config.filter );
+      this.ch.bindQueue( q.queue, this.config.exchange, this.config.filter )
       this.resolve()
       return
     }
@@ -51,6 +52,14 @@ mq.startTopicReceiver = function ( inService ) {
     function() {
       log.info( 'inboundRabbitMQ', 'starting consumer: '+ this.name + '...' )
       this.ch.consume( this.q.queue, this.hookConsume.bind( this ) )    
+    }
+
+  inService.stop =
+    function() {
+      log.info( 'inboundRabbitMQ', 'stopping consumer: '+ this.name + '...' )
+      this.ch.unbindQueue( this.q.queue, this.config.exchange, this.config.filter )
+      this.ch.close()
+      this.conn.close()
     }
 
   inService.hookConsume = 

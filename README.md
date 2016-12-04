@@ -42,3 +42,29 @@ Call syntax:
 ```bash
 node generateTemplate.js --config=./test/config.json > ./test/myService.js
 ```
+
+# Command Messages
+In an asynchronous environment the best way to manage the services is via messages.
+
+The exchange for command messages is `microservicetoolkit`. Each service is listening to
+a topic with the `<service name (lowecase)>.*` as filter.
+
+Message format is:
+```js
+{
+	"cmd":"<command>",
+	"authKey":"<secret key>",   // optional -- for authorization commands
+	"version":"<no>",           // optional -- to address services of on version
+	"serviceId":<UUID>          // optional -- to address a single service (ref. heartbeat)
+}
+```
+
+Currently supported command messages are
+1. *start* starts the message consumers
+2. *kill* stops the whole microservice process
+
+In the test folder you can try that:
+
+```bash
+node sendStopMsg.js --rabbitHost=localhost --service=MessageProcessor
+```

@@ -5,22 +5,32 @@ var heartbeat = require( 'amqp-heartbeat' )
 
 // create class and export it
 var service = exports = module.exports = {
-  version  : null,
+  id       : null,
+  version  : '0.0',
   config   : null,
   inbound  : {},
   outbound : {},
-  mqURL    : require( './channels/outboundRabbitMQ' ).getRabbitMqURL()
+  mqURL    : require( './channels/outboundRabbitMQ' ).getRabbitMqURL(),
+  authKey  : null
+  
 }
 
 // init must be called to start the service
 service.init = function ( config, callback ) {
   if ( ! config ) { log.error('Init','"config.json" not found'); process.exit(1) }
   this.config = config
-  log.info( 'Init', 'starting service "'+config.serviceName+'"' )
+  log.info( 'Init', 'starting service "'+config.serviceName+'" ('+this.version+')' )
   
   initialzeHeatbeat( this.mqURL, config, this.version )
+  .then(
+    function() {
+      this.id = heartbeat.serviceID
+      return initCommandQueue( this )
+    })
   .then (
     function() {
+      initCommands()
+      service.cmd.start()
       return  initializeOutboundFunctions( config ) 
     } )
   .then( 
@@ -30,6 +40,11 @@ service.init = function ( config, callback ) {
   .then( 
     function() { 
       if ( callback ) callback()  
+    } )
+  .catch( 
+    function( err ) {
+      log.error( 'Init', err )
+      process.exit(1) 
     } )
   //log.info( 'XX', service )
 }
@@ -43,6 +58,20 @@ service.start = function() {
   log.info( 'Init', 'Service "'+this.config.serviceName+'" started.' )
 }
 
+
+//call this to start consuming messages
+service.stop = function() {
+  for ( var inChannel in service.inbound ) {
+    service.inbound[ inChannel ].stop()
+  }
+  for ( var outChannel in service.outbound ) {
+    log.info( 'Init', 'Stopping "'+outChannel+'" channel' )
+    service.outbound[ outChannel ].conn.close()
+  }
+  log.info( 'Init', 'Stopping "cmd" channel' )
+  service.cmd.stop()
+}
+
 // wrapper for logger
 service.log = function ( module, message ) {
   // npmlog may be a messaging backbone in the future
@@ -52,6 +81,62 @@ service.log = function ( module, message ) {
 // wrapper for status
 service.setHeartbeatStatus = function( statusTxt ) {
   heartbeat.setStatus( statusTxt )
+}
+
+function initCommandQueue() {
+  var hook = 'microservicetoolkit'
+  service.cmd = {
+      direction : "inbound",
+      name      : hook,
+      type      : "RabbitMQ", 
+      config: {
+        exchange : hook,
+        queue    : '',
+        filter   : service.config.serviceName.toLowerCase()+".*"        
+      }
+    }
+  var mq = require( './channels/inboundRabbitMQ' )
+  return  mq.startTopicReceiver( service.cmd ) 
+}
+
+/*
+ Message must go to queue "microservicetoolkit" with <serviceName> ad filter
+ Example:
+ {
+   "cmd":<"start"|"kill">
+   ,"version":<version>      // optional to address all processes of on version
+   ,"sericeId":<uuid of service>   // optional to address a single process
+  
+ */
+function initCommands() {
+  service.cmd.processMessage = 
+    function ( message ) { // just a draft of my idea
+      service.cmd.ch.ack( message )
+      var data = JSON.parse( message.content )
+      log.info( 'CMD-Message', data )
+      // Optional authorization
+      if ( service.authKey && service.authKey != data.authKey ) { return }
+      // Commands
+      if ( data.cmd == 'start' ) {
+        if ( ! data.version || data.version == service.version ) {
+          this.start()
+        }
+      }
+      if ( data.cmd = 'kill' ) {
+        if ( ! data.version || data.version == service.version ) {
+          setTimeout( function () {
+            service.stop()
+            process.exit(0)
+          }, 1000)
+        } else if ( data.serviceId || data.serviceId == service.id ) {
+          setTimeout( function () {
+            service.stop()
+            process.exit(0)
+          }, 1000)
+        }
+      }
+      return
+    }  
 }
 
 // start heartbeat module
