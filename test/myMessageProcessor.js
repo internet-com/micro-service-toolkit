@@ -30,7 +30,7 @@ service.init( config, function(){
     }
     
   service.log( 'MessageProcessor', 'starting service...' )
-  service.start()
+  service.start() // delete that, if the start should be done by a command message
 
 })
 

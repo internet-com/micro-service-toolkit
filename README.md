@@ -63,6 +63,10 @@ Currently supported command messages are
 1. *start* starts the message consumers
 2. *kill* stops the whole microservice process
 
+By stopping "version-1" and starting "version-2" 
+(JS has no `service.start()` in `service.init(..)` code), 
+you can do version switch in a running system environment.
+
 In the test folder you can try that:
 
 ```bash
