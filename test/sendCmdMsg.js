@@ -70,8 +70,10 @@ function printUsage() {
   console.log( 'Parameter:' )
   console.log( ' --service=<ServiceName>' )
   console.log( ' --cmd=<kill|start|stop>' )
-  console.log( ' optional: --version=<string> or --serviceID=<UUID>' )
-  console.log( ' optional: --authKey=<secret>' )
-	
+  console.log( ' optional: --version=<string>  or  --serviceID=<UUID>' )
+  console.log( ' optional: --authKey=<secret>' )	
+  console.log( ' optional: --rabbitHost=<hostname or IP>  (default is "amq")' )
+  console.log( ' optional: --rabbitUser=<user-id>         (default is "user")' )
+  console.log( ' optional: --rabbitPwd=<password>         (default is "password")' )
 }
 
