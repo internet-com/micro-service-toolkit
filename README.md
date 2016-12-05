@@ -72,3 +72,5 @@ In the test folder you can try that:
 ```bash
 node sendStopMsg.js --rabbitHost=localhost --service=MessageProcessor
 ```
+
+More generic is `node sendCmdMsg.js` (will print out the usage).
