@@ -116,24 +116,25 @@ function initCommands() {
       log.info( 'CMD-Message', data )
       // Optional authorization
       if ( service.authKey && service.authKey != data.authKey ) { return }
+      // Optional select only one version
+      if ( data.version && data.version != service.version ) { return }
+      // Optional select a dedicated process
+      if ( data.serviceId && data.serviceId != service.id ) { return }
+      
       // Commands
       if ( data.cmd == 'start' ) {
-        if ( ! data.version || data.version == service.version ) {
           this.start()
-        }
       }
+      
       if ( data.cmd = 'kill' ) {
-        if ( ! data.version || data.version == service.version ) {
-          setTimeout( function () {
-            service.stop()
-            process.exit(0)
-          }, 1000)
-        } else if ( data.serviceId || data.serviceId == service.id ) {
-          setTimeout( function () {
-            service.stop()
-            process.exit(0)
-          }, 1000)
-        }
+	      setTimeout( function () {
+	        service.stop()
+	        process.exit(0)
+	      }, 1000)
+      }
+  
+      if ( data.cmd = 'stop' ) {
+    	  // TODO
       }
       return
     }  
